@@ -4,14 +4,14 @@ WORKDIR /app
 
 COPY . .
 
-RUN go build
+RUN go build ./cmd/web
 
 FROM debian:bookworm-slim AS runtime
 
 WORKDIR /app
 
-COPY --from=builder /app/snippetbox.mrl00.net /app/
+COPY --from=builder /app/web /app/
 
-CMD [ "./snippetbox.mrl00.net" ]
+CMD [ "./web" ]
 
 
