@@ -14,14 +14,20 @@ func home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ts, err := template.ParseFiles("./ui/html/pages/home.html")
+	files := []string{
+		"./ui/html/pages/base.html",
+		"./ui/html/partials/nav.html",
+		"./ui/html/pages/home.html",
+	}
+
+	ts, err := template.ParseFiles(files...)
 	if err != nil {
 		log.Print(err.Error())
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
 
-	err = ts.Execute(w, nil)
+	err = ts.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		log.Print(err.Error())
 		http.Error(w, "Internal Server Error", 500)
@@ -30,7 +36,6 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 func snippetView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-
 	if err != nil || id < 1 {
 		http.NotFound(w, r)
 		return
